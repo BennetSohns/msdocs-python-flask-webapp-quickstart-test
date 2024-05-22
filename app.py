@@ -27,6 +27,11 @@ def hello():
        print('Request for hello page received with no name or blank name -- redirecting')
        return redirect(url_for('index'))
 
+@app.route('/api/data', methods=['POST'])
+def get_data():
+    data = request.get_json()
+    return jsonify({"received_data": data})
+
 
 if __name__ == '__main__':
    app.run()

@@ -3,6 +3,29 @@ import os
 from flask import (Flask, redirect, render_template, request,
                    send_from_directory, url_for, jsonify)
 
+from transformers import pipeline
+import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
+
+READER_MODEL_NAME = "HuggingFaceH4/zephyr-7b-beta"
+
+model = AutoModelForCausalLM.from_pretrained(
+    READER_MODEL_NAME)
+
+tokenizer = AutoTokenizer.from_pretrained(READER_MODEL_NAME)
+
+READER_LLM = pipeline(
+    model=model,
+    tokenizer=tokenizer,
+    task="text-generation",
+    do_sample=True,
+    temperature=0.2,
+    repetition_penalty=1.1,
+    return_full_text=False,
+    max_new_tokens=500,
+)
+
+
 app = Flask(__name__)
 
 
